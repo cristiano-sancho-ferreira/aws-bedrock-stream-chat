@@ -1,7 +1,9 @@
 # aws-bedrock-stream-chat
 aws-bedrock-stream-chat
 
-## COMANDOS
+![alt text](image.png)
+
+## Comandos
 terraform apply -auto-approve -var-file="./_variables/prd.tfvars"
 terraform plan -var-file="./_variables/prd.tfvars"
 terraform destroy -auto-approve -var-file="./_variables/prd.tfvars"
