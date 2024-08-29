@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with Bedrock</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        #chat {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .message {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .user-message {
+            background-color: #d1e7dd;
+            text-align: right;
+        }
+        .bot-message {
+            background-color: #f8d7da;
+            text-align: left;
+        }
+        #message-input {
+            width: calc(100% - 50px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        #send-button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat">
+        <div id="chat-messages"></div>
+        <input type="text" id="message-input" placeholder="Type your message here...">
+        <button id="send-button">Send</button>
+    </div>
+
+    <script>
+        const apiUrl = 'https://kugcgcl8q2.execute-api.us-east-1.amazonaws.com/dev/ask'; // Substitua com o endpoint do API Gateway
+
+        document.getElementById('send-button').addEventListener('click', function () {
+            const messageInput = document.getElementById('message-input');
+            const messageText = messageInput.value;
+
+            if (messageText.trim() === '') {
+                return;
+            }
+
+            appendMessage('user-message', messageText);
+            messageInput.value = '';
+
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text: messageText })
+            })
+            .then(response => response.json())
+            .then(data => {
+                appendMessage('bot-message', data.body);
+            })
+            .catch(error => {
+                appendMessage('bot-message', 'Error: ' + error.message);
+            });
+        });
+
+        function appendMessage(className, message) {
+            const messageElement = document.createElement('div');
+            messageElement.className = `message ${className}`;
+            messageElement.textContent = message;
+            document.getElementById('chat-messages').appendChild(messageElement);
+        }
+    </script>
+</body>
+</html>
